@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364ed1afde
+        uses: actions/checkout@v4
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@735729ba7d4209ea3837a737dadcae380875e97
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.0
 
