@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Prisma generated client (regenerated in CI)
+appofc/backend/node_modules/.prisma/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Keys and certificates
+*.pem
+*.key
+*.crt
+
+# Bun
+.bun/
+
+# Test / temp
+tmp/
+temp/

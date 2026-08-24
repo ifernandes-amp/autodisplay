@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: autodisplay-financeiro
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: appofc
+    buildCommand: >-
+      bun install --frozen-lockfile &&
+      bun run prisma:generate &&
+      bun --cwd frontend run build &&
+      bun --cwd backend run build
+    startCommand: cd backend && bun run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: BUN_VERSION
+        value: 1.4.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_ORIGIN
+        value: https://autodisplay-financeiro.onrender.com
+      - key: LOG_LEVEL
+        value: info
+      - key: DATABASE_URL
+        sync: false

@@ -1,0 +1,46 @@
+{
+  "name": "autodisplay-app",
+  "private": true,
+  "packageManager": "bun@1.4.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "bun run --parallel dev:backend dev:frontend",
+    "dev:backend": "cd backend && bun run start:dev",
+    "dev:frontend": "cd frontend && bun run dev",
+    "build": "bun run prisma:generate && cd frontend && bun run build && cd ../backend && bun run build",
+    "lint": "cd backend && bun run lint && cd ../frontend && bun run lint",
+    "format": "prettier --write \"backend/src/**/*.ts\" \"backend/test/**/*.ts\" \"frontend/src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"backend/src/**/*.ts\" \"backend/test/**/*.ts\" \"frontend/src/**/*.{ts,tsx}\"",
+    "typecheck": "cd backend && bunx tsc --noEmit && cd ../frontend && bunx tsc --noEmit -p tsconfig.app.json",
+    "test": "cd backend && bun run test && cd ../frontend && bun run test",
+    "prisma:generate": "cd backend && bunx prisma generate",
+    "prisma:validate": "cd backend && bunx prisma validate",
+    "audit": "bun audit --audit-level=high",
+    "prepare": "cd .. && husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "backend/src/**/*.ts": [
+      "prettier --write",
+      "bash -c 'cd backend && bunx eslint --fix \"$@\"' --"
+    ],
+    "backend/test/**/*.ts": [
+      "prettier --write",
+      "bash -c 'cd backend && bunx eslint --fix \"$@\"' --"
+    ],
+    "frontend/src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "bash -c 'cd frontend && bunx eslint --fix \"$@\"' --"
+    ]
+  },
+  "overrides": {
+    "deepmerge-ts": "^8.0.0"
+  }
+}
