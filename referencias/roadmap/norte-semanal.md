@@ -21,7 +21,7 @@ Marcar `[x]` só quando a etapa tiver registro na pasta correspondente **e** o e
 ### Semanas e etapas
 
 - [ ] **Semana 1** — ambiente no ar + auth por perfil
-  - [ ] `semana1/01-setup-tecnico` — **roadmap escrito** ([roadmap.md](semana1/01-setup-tecnico/roadmap.md)); setup **não executado**
+  - [ ] `semana1/01-setup-tecnico` — **implementação local + CI concluídas** ([roadmap.md](semana1/01-setup-tecnico/roadmap.md)); **deploy HTTPS pendente**
   - [ ] `semana1/02-modelagem-auditoria`
   - [ ] `semana1/03-auth-module`
 - [ ] **Semana 2** — fornecedor, categorias, contas a pagar
@@ -72,7 +72,7 @@ A semana é só isto: **ambiente no ar + autenticação por perfil funcionando**
 
 Três frentes, nesta ordem:
 
-1. **Setup técnico** — repositório, Render (Web Service único: API + SPA na mesma origem) e PostgreSQL pago. CI básico (GitHub Actions, ESLint, Prettier, Husky) entra junto. Roadmap da etapa: [semana1/01-setup-tecnico/roadmap.md](semana1/01-setup-tecnico/roadmap.md) (escrito; implementação pendente).
+1. **Setup técnico** — repositório, Render (Web Service único: API + SPA na mesma origem) e PostgreSQL. CI básico (GitHub Actions, ESLint, Prettier, Husky) entra junto. Roadmap da etapa: [semana1/01-setup-tecnico/roadmap.md](semana1/01-setup-tecnico/roadmap.md) (**implementação local + CI concluídas**; deploy HTTPS pendente).
 2. **Modelagem com auditoria já embutida** — schema Prisma das entidades principais e o middleware de `LogAuditoria` desde o primeiro write. Não deixa auditoria “para depois”. Reserva `empresa_id`; nenhuma tela multi-empresa.
 3. **AuthModule** — login individual, senha própria, dois perfis (lançamento vs executivo) resolvidos por guard na API. Esse é o entregável visível.
 

@@ -9,7 +9,7 @@
 | Campo | Valor |
 |---|---|
 | **Etapa** | `semana1/01-setup-tecnico` |
-| **Estado** | Roadmap escrito · **implementação pendente** |
+| **Estado** | Implementação local e CI concluídas · **deploy HTTPS pendente** |
 | **Última atualização** | 24/08/2026 |
 | **Norte geral** | [norte-semanal.md](../../norte-semanal.md) |
 | **Regras de pasta** | [CONTEXTO_AGENTES.md](../../../../CONTEXTO_AGENTES.md) |
@@ -419,11 +419,23 @@ Dentro da Semana 1 (19h total para **três** etapas). Esta etapa consumindo apro
 
 ## 12. Registro de execução
 
-_Preencher quando a implementação começar._
-
 | Data | O que foi feito | Pendências |
 |---|---|---|
-| — | — | — |
+| 24/08/2026 | Monorepo Bun 1.4.0 em `appofc/` (NestJS + React/Vite + Prisma 6). Baseline de segurança, health/ready, testes, Husky, CI verde. Repo privado: `github.com/IgorFernandesSantos/autodisplay`. Postgres local via `docker-compose`. Blueprint Render Free em `appofc/render.yaml`. | Deploy HTTPS no Render + `DATABASE_URL` do Neon Free (sem CLI autenticada no ambiente). Validar `/health` e `/api/ready` em produção. |
+
+### Decisões aplicadas na implementação
+
+- **Prisma 6.19.3** (`prisma-client-js`) — Prisma 7 exige Node 20.19+; CI usa Bun com Node compatível, mas o ecossistema local/Render free ainda beneficia de Prisma 6 estável.
+- **PostgreSQL gratuito:** Neon Free (não Render Postgres free — expira em 30 dias). `DATABASE_URL` entra como segredo no Render.
+- **Deploy:** Render Web Service Free (cold start após inatividade). Homologação apenas; produção real exige plano pago com backup.
+
+### Evidências locais (24/08/2026)
+
+- `GET /health` → 200 sem banco
+- `GET /api/ready` → 200 com Postgres; 503 com banco parado
+- Boot recusa `DATABASE_URL` inválida (Zod fail-fast)
+- Produção (`NODE_ENV=production`) serve SPA + `/api/ready` na mesma origem
+- CI GitHub Actions run `32783715622` → **success**
 
 ---
 
