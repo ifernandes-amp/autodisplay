@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
+import { AuthModule } from './auth/auth.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { validateEnv } from './config/env.schema';
 import { DatabaseModule } from './database/database.module';
@@ -23,9 +24,11 @@ import { HealthModule } from './health/health.module';
             'req.headers.authorization',
             'req.headers.cookie',
             'req.headers.set-cookie',
+            'req.headers.x-csrf-token',
             'req.body.password',
             'req.body.senha',
             'req.body.token',
+            'req.body.csrfToken',
             'DATABASE_URL',
           ],
           censor: '[REDACTED]',
@@ -50,6 +53,7 @@ import { HealthModule } from './health/health.module';
     ]),
     DatabaseModule,
     HealthModule,
+    AuthModule,
   ],
   providers: [
     {

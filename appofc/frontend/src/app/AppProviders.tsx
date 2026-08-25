@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider } from 'antd';
 import type { ReactNode } from 'react';
+import { configureApiClient } from '../lib/api-client';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -9,6 +10,12 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 30_000,
     },
+  },
+});
+
+configureApiClient({
+  onUnauthorized: () => {
+    queryClient.removeQueries({ queryKey: ['auth'] });
   },
 });
 

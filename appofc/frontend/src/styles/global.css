@@ -49,6 +49,53 @@ body {
   margin-top: 16px;
 }
 
+.login-shell {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-card {
+  width: min(100%, 420px);
+}
+
+.login-alert {
+  margin-bottom: 16px;
+}
+
+.login-footnote {
+  margin-bottom: 0;
+}
+
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.auth-header-title {
+  margin: 0 !important;
+}
+
+.auth-main {
+  flex: 1;
+  display: grid;
+  place-items: start center;
+  padding: 24px;
+}
+
 :focus-visible {
   outline: 3px solid #1677ff;
   outline-offset: 2px;

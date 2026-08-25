@@ -421,13 +421,14 @@ Dentro da Semana 1 (19h total para **três** etapas). Esta etapa consumindo apro
 
 | Data | O que foi feito | Pendências |
 |---|---|---|
-| 24/08/2026 | Monorepo Bun 1.4.0 em `appofc/` (NestJS + React/Vite + Prisma 6). Baseline de segurança, health/ready, testes, Husky, CI verde. Repo privado: `github.com/IgorFernandesSantos/autodisplay`. Postgres local via `docker-compose`. Blueprint Render Free em `appofc/render.yaml`. | Deploy HTTPS no Render + `DATABASE_URL` do Neon Free (sem CLI autenticada no ambiente). Validar `/health` e `/api/ready` em produção. |
+| 24/08/2026 | Monorepo Bun 1.4.0 em `appofc/` (NestJS + React/Vite + Prisma 6). Baseline de segurança, health/ready, testes, Husky, CI verde. Repo privado: `github.com/IgorFernandesSantos/autodisplay`. Postgres local via `docker-compose`. Blueprint Render Free em `appofc/render.yaml`. | Deploy HTTPS no Render + `DATABASE_URL` do Neon Free (sem CLI autenticada no ambiente). Validar `/health` e `/api/ready` em produção. Aguardar e-mail com domínio oficial da empresa para configuração de domínio personalizado e apontamento DNS no Registro.br. |
 
 ### Decisões aplicadas na implementação
 
 - **Prisma 6.19.3** (`prisma-client-js`) — Prisma 7 exige Node 20.19+; CI usa Bun com Node compatível, mas o ecossistema local/Render free ainda beneficia de Prisma 6 estável.
 - **PostgreSQL gratuito:** Neon Free (não Render Postgres free — expira em 30 dias). `DATABASE_URL` entra como segredo no Render.
 - **Deploy:** Render Web Service Free (cold start após inatividade). Homologação apenas; produção real exige plano pago com backup.
+- **Domínio de produção:** configuração de domínio próprio ficará pendente até recebimento do e-mail com o domínio oficial da empresa; após isso, registrar/apontar DNS no Registro.br para o serviço hospedado.
 
 ### Evidências locais (24/08/2026)
 

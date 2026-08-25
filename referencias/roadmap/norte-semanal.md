@@ -21,9 +21,9 @@ Marcar `[x]` só quando a etapa tiver registro na pasta correspondente **e** o e
 ### Semanas e etapas
 
 - [ ] **Semana 1** — ambiente no ar + auth por perfil
-  - [ ] `semana1/01-setup-tecnico` — **implementação local + CI concluídas** ([roadmap.md](semana1/01-setup-tecnico/roadmap.md)); **deploy HTTPS pendente**
-  - [ ] `semana1/02-modelagem-auditoria`
-  - [ ] `semana1/03-auth-module`
+  - [ ] `semana1/01-setup-tecnico` — **implementação local + CI concluídas** ([roadmap.md](semana1/01-setup-tecnico/roadmap.md)); **deploy HTTPS pendente** (aguardando e-mail com domínio oficial da empresa para apontamento via Registro.br)
+  - [ ] `semana1/02-modelagem-auditoria` — **implementação local concluída** ([roadmap.md](semana1/02-modelagem-auditoria/roadmap.md)); **CI remoto pendente**
+  - [ ] `semana1/03-auth-module` — **implementação local concluída** ([roadmap.md](semana1/03-auth-module/roadmap.md)); **CI remoto, HTTPS e provisionamento real pendentes**
 - [ ] **Semana 2** — fornecedor, categorias, contas a pagar
   - [ ] `semana2/01-categorias`
   - [ ] `semana2/02-fornecedor`

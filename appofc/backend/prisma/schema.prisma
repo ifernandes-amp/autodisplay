@@ -6,3 +6,353 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum PerfilUsuario {
+  LANCAMENTO
+  EXECUTIVO
+}
+
+enum TipoCategoria {
+  ENTRADA
+  SAIDA
+}
+
+enum StatusTituloPagar {
+  EM_ABERTO
+  PAGA
+}
+
+enum StatusTituloReceber {
+  EM_ABERTO
+  RECEBIDA
+}
+
+enum OrigemContaPagar {
+  NOTA_COMPRA
+  COMBINADO_AVULSO
+  ANTECIPACAO
+}
+
+enum TipoMovimento {
+  ENTRADA
+  SAIDA
+}
+
+enum OrigemMovimento {
+  MANUAL
+  BAIXA_PAGAR
+  BAIXA_RECEBER
+}
+
+enum TipoCredito {
+  FORMAL
+  INFORMAL
+}
+
+enum StatusEmissaoNf {
+  PENDENTE
+  EMITIDA
+  CANCELADA
+  ERRO
+}
+
+enum AcaoAuditoria {
+  CREATE
+  UPDATE
+  INACTIVATE
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model Empresa {
+  id           String   @id @default(uuid()) @db.Uuid
+  razaoSocial  String   @map("razao_social")
+  nomeFantasia String?  @map("nome_fantasia")
+  cnpj         String   @unique @db.VarChar(14)
+  ativa        Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  usuarios            Usuario[]
+  sessoes             SessaoUsuario[]
+  contasBancarias     ContaBancaria[]
+  categorias          Categoria[]
+  fornecedores        Fornecedor[]
+  clientes            Cliente[]
+  contasPagar         ContaPagar[]
+  contasReceber       ContaReceber[]
+  baixas              Baixa[]
+  movimentosCaixa     MovimentoCaixa[]
+  creditosAntecipacao CreditoAntecipacao[]
+  notasFiscais        NotaFiscal[]
+
+  @@map("empresa")
+}
+
+model Usuario {
+  id              String        @id @default(uuid()) @db.Uuid
+  empresaId       String        @map("empresa_id") @db.Uuid
+  nome            String
+  email           String
+  senhaHash       String        @map("senha_hash")
+  perfil          PerfilUsuario
+  ultimoAcessoEm  DateTime?     @map("ultimo_acesso_em") @db.Timestamptz(3)
+  senhaAlteradaEm DateTime?     @map("senha_alterada_em") @db.Timestamptz(3)
+  inativadoEm     DateTime?     @map("inativado_em") @db.Timestamptz(3)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa         Empresa          @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  movimentosCaixa MovimentoCaixa[]
+  sessoes         SessaoUsuario[]
+
+  @@unique([empresaId, email])
+  @@unique([id, empresaId])
+  @@index([empresaId])
+  @@map("usuario")
+}
+
+model SessaoUsuario {
+  id              String    @id @default(uuid()) @db.Uuid
+  empresaId       String    @map("empresa_id") @db.Uuid
+  usuarioId       String    @map("usuario_id") @db.Uuid
+  tokenHash       String    @unique @map("token_hash") @db.Char(64)
+  criadaEm        DateTime  @default(now()) @map("criada_em") @db.Timestamptz(3)
+  ultimoUsoEm     DateTime  @default(now()) @map("ultimo_uso_em") @db.Timestamptz(3)
+  expiraEm        DateTime  @map("expira_em") @db.Timestamptz(3)
+  revogadaEm      DateTime? @map("revogada_em") @db.Timestamptz(3)
+  motivoRevogacao String?   @map("motivo_revogacao")
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  usuario Usuario @relation(fields: [usuarioId, empresaId], references: [id, empresaId], onDelete: Restrict)
+
+  @@index([usuarioId, revogadaEm])
+  @@index([expiraEm])
+  @@index([empresaId, usuarioId])
+  @@map("sessao_usuario")
+}
+
+model ContaBancaria {
+  id           String    @id @default(uuid()) @db.Uuid
+  empresaId    String    @map("empresa_id") @db.Uuid
+  nome         String
+  banco        String?
+  saldoInicial Decimal   @default(0) @map("saldo_inicial") @db.Decimal(15, 2)
+  inativadoEm  DateTime? @map("inativado_em") @db.Timestamptz(3)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa    Empresa          @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  baixas     Baixa[]
+  movimentos MovimentoCaixa[]
+
+  @@index([empresaId])
+  @@map("conta_bancaria")
+}
+
+model Categoria {
+  id          String        @id @default(uuid()) @db.Uuid
+  empresaId   String        @map("empresa_id") @db.Uuid
+  nome        String
+  tipo        TipoCategoria
+  inativadoEm DateTime?     @map("inativado_em") @db.Timestamptz(3)
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa       Empresa        @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contasPagar   ContaPagar[]
+  contasReceber ContaReceber[]
+
+  @@unique([empresaId, nome, tipo])
+  @@index([empresaId])
+  @@map("categoria")
+}
+
+model Fornecedor {
+  id          String    @id @default(uuid()) @db.Uuid
+  empresaId   String    @map("empresa_id") @db.Uuid
+  nome        String
+  documento   String?
+  contato     String?
+  inativadoEm DateTime? @map("inativado_em") @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa     Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contasPagar ContaPagar[]
+
+  @@index([empresaId])
+  @@map("fornecedor")
+}
+
+model Cliente {
+  id          String    @id @default(uuid()) @db.Uuid
+  empresaId   String    @map("empresa_id") @db.Uuid
+  nome        String
+  documento   String?
+  contato     String?
+  inativadoEm DateTime? @map("inativado_em") @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa       Empresa        @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contasReceber ContaReceber[]
+
+  @@index([empresaId])
+  @@map("cliente")
+}
+
+model ContaPagar {
+  id             String             @id @default(uuid()) @db.Uuid
+  empresaId      String             @map("empresa_id") @db.Uuid
+  fornecedorId   String             @map("fornecedor_id") @db.Uuid
+  categoriaId    String             @map("categoria_id") @db.Uuid
+  valor          Decimal            @db.Decimal(15, 2)
+  dataEmissao    DateTime           @map("data_emissao") @db.Date
+  dataVencimento DateTime           @map("data_vencimento") @db.Date
+  status         StatusTituloPagar
+  origem         OrigemContaPagar
+  inativadoEm    DateTime?          @map("inativado_em") @db.Timestamptz(3)
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa    Empresa    @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  fornecedor Fornecedor @relation(fields: [fornecedorId], references: [id], onDelete: Restrict)
+  categoria  Categoria  @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  baixas     Baixa[]
+
+  @@index([empresaId])
+  @@index([empresaId, dataVencimento])
+  @@index([empresaId, status])
+  @@map("conta_pagar")
+}
+
+model ContaReceber {
+  id               String              @id @default(uuid()) @db.Uuid
+  empresaId        String              @map("empresa_id") @db.Uuid
+  clienteId        String              @map("cliente_id") @db.Uuid
+  categoriaId      String?             @map("categoria_id") @db.Uuid
+  pedidoReferencia String?             @map("pedido_referencia")
+  valor            Decimal             @db.Decimal(15, 2)
+  dataEmissao      DateTime            @map("data_emissao") @db.Date
+  dataVencimento   DateTime            @map("data_vencimento") @db.Date
+  status           StatusTituloReceber
+  inativadoEm      DateTime?           @map("inativado_em") @db.Timestamptz(3)
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa      Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  cliente      Cliente      @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+  categoria    Categoria?   @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  baixas       Baixa[]
+  notasFiscais NotaFiscal[]
+
+  @@index([empresaId])
+  @@index([empresaId, dataVencimento])
+  @@index([empresaId, status])
+  @@map("conta_receber")
+}
+
+model Baixa {
+  id              String    @id @default(uuid()) @db.Uuid
+  empresaId       String    @map("empresa_id") @db.Uuid
+  contaPagarId    String?   @map("conta_pagar_id") @db.Uuid
+  contaReceberId  String?   @map("conta_receber_id") @db.Uuid
+  valor           Decimal   @db.Decimal(15, 2)
+  data            DateTime  @db.Date
+  contaBancariaId String    @map("conta_bancaria_id") @db.Uuid
+  inativadoEm     DateTime? @map("inativado_em") @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa       Empresa       @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contaPagar    ContaPagar?   @relation(fields: [contaPagarId], references: [id], onDelete: Restrict)
+  contaReceber  ContaReceber? @relation(fields: [contaReceberId], references: [id], onDelete: Restrict)
+  contaBancaria ContaBancaria @relation(fields: [contaBancariaId], references: [id], onDelete: Restrict)
+
+  @@index([empresaId])
+  @@index([contaPagarId])
+  @@index([contaReceberId])
+  @@map("baixa")
+}
+
+model MovimentoCaixa {
+  id              String          @id @default(uuid()) @db.Uuid
+  empresaId       String          @map("empresa_id") @db.Uuid
+  contaBancariaId String          @map("conta_bancaria_id") @db.Uuid
+  tipo            TipoMovimento
+  valor           Decimal         @db.Decimal(15, 2)
+  data            DateTime        @db.Date
+  origem          OrigemMovimento
+  referenciaId    String?         @map("referencia_id") @db.Uuid
+  usuarioId       String?         @map("usuario_id") @db.Uuid
+  descricao       String?
+  inativadoEm     DateTime?       @map("inativado_em") @db.Timestamptz(3)
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa       Empresa       @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contaBancaria ContaBancaria @relation(fields: [contaBancariaId], references: [id], onDelete: Restrict)
+  usuario       Usuario?      @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  @@index([empresaId])
+  @@index([empresaId, referenciaId])
+  @@index([contaBancariaId, data])
+  @@map("movimento_caixa")
+}
+
+model CreditoAntecipacao {
+  id          String      @id @default(uuid()) @db.Uuid
+  empresaId   String      @map("empresa_id") @db.Uuid
+  operador    String
+  taxa        Decimal?    @db.Decimal(7, 4)
+  tipo        TipoCredito
+  valor       Decimal     @db.Decimal(15, 2)
+  data        DateTime    @db.Date
+  inativadoEm DateTime?   @map("inativado_em") @db.Timestamptz(3)
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+
+  @@index([empresaId])
+  @@map("credito_antecipacao")
+}
+
+model NotaFiscal {
+  id                String          @id @default(uuid()) @db.Uuid
+  empresaId         String          @map("empresa_id") @db.Uuid
+  contaReceberId    String          @map("conta_receber_id") @db.Uuid
+  statusEmissao     StatusEmissaoNf @map("status_emissao")
+  referenciaExterna String?         @map("referencia_externa")
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa      Empresa      @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+  contaReceber ContaReceber @relation(fields: [contaReceberId], references: [id], onDelete: Restrict)
+
+  @@index([empresaId])
+  @@index([contaReceberId])
+  @@map("nota_fiscal")
+}
+
+model LogAuditoria {
+  id            String        @id @default(uuid()) @db.Uuid
+  empresaId     String?       @map("empresa_id") @db.Uuid
+  entidade      String
+  entidadeId    String        @map("entidade_id") @db.Uuid
+  usuarioId     String?       @map("usuario_id") @db.Uuid
+  correlationId String?       @map("correlation_id")
+  acao          AcaoAuditoria
+  valorAnterior Json?         @map("valor_anterior")
+  valorNovo     Json?         @map("valor_novo")
+  ocorridoEm    DateTime      @default(now()) @map("ocorrido_em") @db.Timestamptz(3)
+
+  @@index([entidade, entidadeId])
+  @@index([usuarioId])
+  @@index([ocorridoEm(sort: Desc)])
+  @@index([empresaId])
+  @@map("log_auditoria")
+}
