@@ -79,3 +79,116 @@ REMOTE_URL=https://github.com/igor-autodisplay/autodisplay.git
 Reset branch 'feat/semana-1-delivery'
 M	full-agent-run.txt
 BRANCH=feat/semana-1-delivery
+warning: in the working copy of 'full-agent-run.txt', CRLF will be replaced by LF the next time Git touches it
+MM full-agent-run.txt
+ΓåÆ No staged files match any configured task.
+[feat/semana-1-delivery 86938a8] feat: week 1 delivery (audit, auth, roadmaps)
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+COMMIT_STATUS=success COMMIT_HASH=86938a88f06eee71d25173b03e48a46261d54f59
+remote: Repository not found.
+fatal: repository 'https://github.com/igor-autodisplay/autodisplay.git/' not found
+PUSH_STATUS=failed
+GraphQL: Could not resolve to a Repository with the name 'igor-autodisplay/autodisplay'. (repository)
+PR_STATUS=failed_or_exists
+=== BLOCKERS ===
+=== DONE ===
+=== GIT REMOTE ===
+origin	https://github.com/igor-autodisplay/autodisplay.git (fetch)
+origin	https://github.com/igor-autodisplay/autodisplay.git (push)
+=== GIT LOG ===
+86938a8 feat: week 1 delivery (audit, auth, roadmaps)
+=== FULL push-result.log ===
+=== PUSH RAPIDO 2026-08-25T20:24:47-03:00 ===
+GIT_INIT=already
+ENV_IGNORED appofc/.env
+ENV_IGNORED appofc/backend/.env
+ENV_OK=true
+$ prettier --write "backend/src/**/*.ts" "backend/test/**/*.ts" "frontend/src/**/*.{ts,tsx}"
+backend/src/app.module.ts 87ms (unchanged)
+backend/src/auditoria/audit-context.service.spec.ts 17ms (unchanged)
+backend/src/auditoria/audit-context.service.ts 10ms (unchanged)
+backend/src/auditoria/audit-context.types.ts 2ms (unchanged)
+backend/src/auditoria/auditoria.module.ts 4ms (unchanged)
+backend/src/auth/auth.constants.ts 7ms (unchanged)
+backend/src/auth/auth.controller.ts 18ms (unchanged)
+backend/src/auth/auth.module.ts 8ms (unchanged)
+backend/src/auth/auth.service.ts 53ms (unchanged)
+backend/src/auth/csrf.service.spec.ts 30ms (unchanged)
+backend/src/auth/csrf.service.ts 19ms (unchanged)
+backend/src/auth/decorators/current-user.decorator.ts 4ms (unchanged)
+backend/src/auth/decorators/public.decorator.ts 6ms (unchanged)
+backend/src/auth/decorators/roles.decorator.ts 2ms (unchanged)
+backend/src/auth/dto/login.dto.ts 6ms (unchanged)
+backend/src/auth/guards/csrf.guard.ts 9ms (unchanged)
+backend/src/auth/guards/roles.guard.ts 5ms (unchanged)
+backend/src/auth/guards/session-auth.guard.ts 11ms (unchanged)
+backend/src/auth/interceptors/audit-context.interceptor.ts 12ms (unchanged)
+backend/src/auth/password.service.spec.ts 5ms (unchanged)
+backend/src/auth/password.service.ts 8ms (unchanged)
+backend/src/auth/session.service.ts 30ms (unchanged)
+backend/src/auth/types/authenticated-user.ts 3ms (unchanged)
+backend/src/common/filters/http-exception.filter.spec.ts 8ms (unchanged)
+backend/src/common/filters/http-exception.filter.ts 8ms (unchanged)
+backend/src/common/middleware/correlation-id.middleware.ts 5ms (unchanged)
+backend/src/config/env.schema.spec.ts 7ms (unchanged)
+backend/src/config/env.schema.ts 14ms (unchanged)
+backend/src/database/database.module.ts 2ms (unchanged)
+backend/src/database/prisma.service.ts 15ms (unchanged)
+backend/src/health/health.controller.spec.ts 6ms (unchanged)
+backend/src/health/health.controller.ts 3ms (unchanged)
+backend/src/health/health.module.ts 3ms (unchanged)
+backend/src/health/health.service.ts 10ms (unchanged)
+backend/src/main.ts 10ms (unchanged)
+backend/src/types/express.d.ts 3ms (unchanged)
+backend/test/auth.e2e-spec.ts 20ms (unchanged)
+backend/test/health.e2e-spec.ts 9ms (unchanged)
+backend/test/integration/auditoria.integration.spec.ts 30ms (unchanged)
+backend/test/integration/auth.integration.spec.ts 8ms (unchanged)
+backend/test/integration/test-database.helper.ts 8ms (unchanged)
+frontend/src/app/App.tsx 3ms (unchanged)
+frontend/src/app/AppProviders.tsx 11ms (unchanged)
+frontend/src/features/auth/api/auth-api.ts 12ms (unchanged)
+frontend/src/features/auth/components/AuthenticatedShell.tsx 15ms (unchanged)
+frontend/src/features/auth/components/AuthGate.tsx 4ms (unchanged)
+frontend/src/features/auth/hooks/useAuth.ts 9ms (unchanged)
+frontend/src/features/auth/pages/LoginPage.tsx 19ms (unchanged)
+frontend/src/features/auth/types/auth.ts 3ms (unchanged)
+frontend/src/lib/api-client.test.ts 19ms (unchanged)
+frontend/src/lib/api-client.ts 16ms (unchanged)
+frontend/src/lib/csrf-token.test.ts 4ms (unchanged)
+frontend/src/lib/csrf-token.ts 3ms (unchanged)
+frontend/src/main.tsx 2ms (unchanged)
+frontend/src/vite-env.d.ts 6ms (unchanged)
+github.com
+  Γ£ô Logged in to github.com account ifernandes-amp (/home/ifernandes/.config/gh/hosts.yml)
+  - Active account: true
+  - Git operations protocol: https
+  - Token: gho_************************************
+  - Token scopes: 'gist', 'read:org', 'repo', 'workflow'
+
+  Γ£ô Logged in to github.com account IgorFernandesSantos (/home/ifernandes/.config/gh/hosts.yml)
+  - Active account: false
+  - Git operations protocol: https
+  - Token: gho_************************************
+  - Token scopes: 'gist', 'read:org', 'repo', 'workflow'
+GH_AUTH=ok GH_USER=ifernandes-amp
+REPO_MISSING=igor-autodisplay/autodisplay trying transfer...
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/repos#transfer-a-repository","status":"404"}gh: Not Found (HTTP 404)
+TRANSFER_STATUS=transfer_failed_or_no_access
+REMOTE_URL=https://github.com/igor-autodisplay/autodisplay.git
+Reset branch 'feat/semana-1-delivery'
+M	full-agent-run.txt
+BRANCH=feat/semana-1-delivery
+warning: in the working copy of 'full-agent-run.txt', CRLF will be replaced by LF the next time Git touches it
+MM full-agent-run.txt
+ΓåÆ No staged files match any configured task.
+[feat/semana-1-delivery 86938a8] feat: week 1 delivery (audit, auth, roadmaps)
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+COMMIT_STATUS=success COMMIT_HASH=86938a88f06eee71d25173b03e48a46261d54f59
+remote: Repository not found.
+fatal: repository 'https://github.com/igor-autodisplay/autodisplay.git/' not found
+PUSH_STATUS=failed
+GraphQL: Could not resolve to a Repository with the name 'igor-autodisplay/autodisplay'. (repository)
+PR_STATUS=failed_or_exists
+=== BLOCKERS ===
+=== DONE ===
