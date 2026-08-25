@@ -2,11 +2,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { NextFunction, Request, Response } from 'express';
 import { join } from 'node:path';
 import { AppModule } from './app.module';
+import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
 import type { EnvConfig } from './config/env.schema';
 
 async function bootstrap(): Promise<void> {
@@ -24,6 +26,10 @@ async function bootstrap(): Promise<void> {
   app.useLogger(app.get(Logger));
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
+  app.use(cookieParser());
+  app.use(
+    new CorrelationIdMiddleware().use.bind(new CorrelationIdMiddleware()),
+  );
 
   app.use(
     helmet({

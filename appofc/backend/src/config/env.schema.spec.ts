@@ -8,6 +8,11 @@ describe('validateEnv', () => {
       'postgresql://autodisplay:autodisplay_dev@localhost:5432/autodisplay',
     FRONTEND_ORIGIN: 'http://localhost:5173',
     LOG_LEVEL: 'info',
+    AUTH_EMPRESA_ID: '00000000-0000-4000-8000-000000000001',
+    AUTH_CSRF_SECRET: 'local-dev-csrf-secret-min-32-chars!!',
+    AUTH_SESSION_IDLE_MINUTES: '30',
+    AUTH_SESSION_ABSOLUTE_HOURS: '12',
+    AUTH_MAX_SESSIONS_PER_USER: '3',
   };
 
   it('accepts a valid configuration', () => {

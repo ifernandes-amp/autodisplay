@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, mock } from 'bun:test';
-import { ApiError, apiRequest } from './api-client';
+import { ApiError, apiRequest, configureApiClient } from './api-client';
 
 describe('apiRequest', () => {
   const originalFetch = globalThis.fetch;
 
   afterEach(() => {
     globalThis.fetch = originalFetch;
+    configureApiClient({});
   });
 
   it('returns parsed JSON for successful responses', async () => {
@@ -57,5 +58,54 @@ describe('apiRequest', () => {
         statusCode: 408,
       }),
     );
+  });
+
+  it('sends credentials and CSRF header on mutations', async () => {
+    let capturedInit: RequestInit | undefined;
+
+    globalThis.fetch = mock((_input: RequestInfo | URL, init?: RequestInit) => {
+      capturedInit = init;
+      return Promise.resolve(new Response(null, { status: 204 }));
+    }) as typeof fetch;
+
+    await apiRequest('/auth/logout', { method: 'POST' }, 'csrf-token-value');
+
+    expect(capturedInit?.credentials).toBe('include');
+    expect((capturedInit?.headers as Record<string, string>)['X-CSRF-Token']).toBe(
+      'csrf-token-value',
+    );
+  });
+
+  it('handles 204 responses without parsing JSON', async () => {
+    globalThis.fetch = mock(() =>
+      Promise.resolve(new Response(null, { status: 204 })),
+    ) as typeof fetch;
+
+    await expect(
+      apiRequest<void>('/auth/logout', { method: 'POST' }, 'token'),
+    ).resolves.toBeUndefined();
+  });
+
+  it('invokes unauthorized callback on 401', async () => {
+    let unauthorizedCalls = 0;
+    configureApiClient({
+      onUnauthorized: () => {
+        unauthorizedCalls += 1;
+      },
+    });
+
+    globalThis.fetch = mock(() =>
+      Promise.resolve(
+        new Response(JSON.stringify({ message: 'Unauthorized' }), {
+          status: 401,
+          headers: { 'content-type': 'application/json' },
+        }),
+      ),
+    ) as typeof fetch;
+
+    await expect(apiRequest('/auth/me')).rejects.toEqual(
+      expect.objectContaining<Partial<ApiError>>({ statusCode: 401 }),
+    );
+    expect(unauthorizedCalls).toBe(1);
   });
 });
